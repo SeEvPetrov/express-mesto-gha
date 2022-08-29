@@ -1,8 +1,9 @@
 const User = require('../models/user');
 
 const createUser = async (req, res) => {
+  const { name, about, avatar } = req.body;
   try {
-    const user = await new User(req.body).save();
+    const user = await User.create({ name, about, avatar });
     res.status(200).send(user);
   } catch (err) {
     if (err.errors.name.name === 'ValidatorError') {

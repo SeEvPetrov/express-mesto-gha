@@ -9,12 +9,20 @@ const { routes } = require('./routes');
 
 // app.use(express.static(path.join(__dirname, "public")));
 
+app.use((req, res, next) => {
+  req.user = {
+    _id: '630c97ef1ea76b2625787454',
+  };
+
+  next();
+});
+
 app.use('/', (req, res, next) => {
   console.log(req.method, req.url);
   next();
 });
 
-app.get('/', (req, res, next) => {
+app.get('/', (req, res) => {
   res.send('Hello world');
 });
 

@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 2,
     maxlength: 30,
-    validate: (v) => /^[А-ЯЁ][а-яё]*$/.test(v),
   },
   about: {
     type: String,
