@@ -7,7 +7,8 @@ const createUser = async (req, res) => {
     res.status(200).send(user);
   } catch (err) {
     if (err.errors.name.name === 'ValidatorError') {
-      return res.status(400).send({ message: 'Не заполнены все нужные атрибуты' });
+      res.status(400).send({ message: 'Не заполнены все нужные атрибуты' });
+      return;
     }
     res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
   }
@@ -28,13 +29,28 @@ const getUserById = async (req, res) => {
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(404).send({ message: 'Такого пользователя не существует' });
+      res.status(404).send({ message: 'Пользователь не найден' });
+      return;
     }
-    res.send(user);
+    res.status(200).send(user);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      return res.status(400).send({ message: 'Невалидный ID пользователя' });
+      res.status(400).send({ message: 'Невалидный ID пользователя' });
+      return;
     }
+    res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
+  }
+};
+
+const updateUser = async (req, res) => {
+  // const { name, about } = req.body;
+  try {
+    const updat = await User.findByIdAndUpdate(req.user._id, {
+      'name': name,
+      'about': about,
+    });
+    res.status(200).send(updat);
+  } catch (err) {
     res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
   }
 };
@@ -43,4 +59,5 @@ module.exports = {
   createUser,
   getUsers,
   getUserById,
+  updateUser,
 };

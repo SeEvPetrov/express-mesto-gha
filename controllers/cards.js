@@ -7,7 +7,8 @@ const createCard = async (req, res) => {
     res.status(200).send(card);
   } catch (err) {
     if (err.errors.link.name === 'ValidatorError') {
-      return res.status(400).send({ message: 'Не заполнены все нужные атрибуты' });
+      res.status(400).send({ message: 'Не заполнены все нужные атрибуты' });
+      return;
     }
     res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
   }
@@ -23,11 +24,18 @@ const getCards = async (req, res) => {
 };
 
 const deleteCard = async (req, res) => {
+  const { cardId } = req.params;
+
   try {
-    await Card.findByIdAndRemove(req.params.cardId);
+    const card = await Card.findById(cardId);
+    if (!card) {
+      res.status(404).send({ message: 'Карточка не найдена' });
+      return;
+    }
+    card.remove();
     res.status(200).send('Карточка удалена');
   } catch (err) {
-    res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
+    res.status(500).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 

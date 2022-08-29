@@ -1,13 +1,10 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 
 const { PORT = 3000 } = process.env;
 // создаем сервер
 const app = express();
 const { routes } = require('./routes');
-
-// app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
   req.user = {
