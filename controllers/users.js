@@ -3,8 +3,8 @@ const User = require('../models/user');
 const createUser = async (req, res) => {
   const { name, about, avatar } = req.body;
   try {
-    await User.create({ name, about, avatar });
-    res.status(200).send({ message: 'Пользователь создан' });
+    const user = await User.create({ name, about, avatar });
+    res.status(200).send(user);
   } catch (err) {
     if (err.errors.name.name === 'ValidatorError') {
       res.status(400).send({ message: 'Переданы некорректные данные' });
