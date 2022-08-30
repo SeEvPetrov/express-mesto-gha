@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const { PORT = 3000 } = process.env;
-// создаем сервер
 const app = express();
 const { routes } = require('./routes');
 
@@ -12,15 +11,6 @@ app.use((req, res, next) => {
   };
 
   next();
-});
-
-app.use('/', (req, res, next) => {
-  console.log(req.method, req.url);
-  next();
-});
-
-app.get('/', (req, res) => {
-  res.send('Hello world');
 });
 
 app.use(routes);

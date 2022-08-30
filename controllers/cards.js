@@ -3,14 +3,14 @@ const Card = require('../models/cards');
 const createCard = async (req, res) => {
   const { name, link } = req.body;
   try {
-    const card = await Card.create({ name, link, owner: req.user._id });
-    res.status(200).send(card);
+    await Card.create({ name, link, owner: req.user._id });
+    res.status(200).send({ message: 'Карточка создана' });
   } catch (err) {
     if (err.errors.link.name === 'ValidatorError') {
-      res.status(400).send({ message: 'Не заполнены все нужные атрибуты' });
+      res.status(400).send({ message: 'Переданы некорректные данные' });
       return;
     }
-    res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
+    res.status(500).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -33,8 +33,12 @@ const deleteCard = async (req, res) => {
       return;
     }
     card.remove();
-    res.status(200).send('Карточка удалена');
+    res.status(200).send({ message: 'Карточка удалена' });
   } catch (err) {
+    if (err.kind === 'ObjectId') {
+      res.status(400).send({ message: 'Невалидный ID карточки' });
+      return;
+    }
     res.status(500).send({ message: 'Произошла ошибка на сервере' });
   }
 };
@@ -55,10 +59,10 @@ const likeCard = async (req, res) => {
     res.status(200).send('Все прошло успешно');
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      res.status(400).send({ message: 'Невалидный ID' });
+      res.status(400).send({ message: 'Невалидный ID карточки' });
       return;
     }
-    res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
+    res.status(500).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -77,7 +81,11 @@ const dislikeCard = async (req, res) => {
     }
     res.status(200).send(card);
   } catch (err) {
-    res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
+    if (err.kind === 'ObjectId') {
+      res.status(400).send({ message: 'Невалидный ID карточки' });
+      return;
+    }
+    res.status(500).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
