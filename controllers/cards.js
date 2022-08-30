@@ -1,4 +1,5 @@
 const Card = require('../models/cards');
+const { BAD_REQ_ERROR, NOT_FOUND_ERROR, SERVER__ERROR } = require('../errors/errors');
 
 const createCard = async (req, res) => {
   const { name, link } = req.body;
@@ -7,10 +8,10 @@ const createCard = async (req, res) => {
     res.status(200).send(card);
   } catch (err) {
     if (err.errors) {
-      res.status(400).send({ message: 'Переданы некорректные данные' });
+      res.status(BAD_REQ_ERROR).send({ message: 'Переданы некорректные данные' });
       return;
     }
-    res.status(500).send({ message: 'Произошла ошибка на сервере' });
+    res.status(SERVER__ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -19,7 +20,7 @@ const getCards = async (req, res) => {
     const cards = await Card.find({});
     res.status(200).send(cards);
   } catch (err) {
-    res.status(500).send({ message: 'Произошла ошибка на сервере' });
+    res.status(SERVER__ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -29,17 +30,17 @@ const deleteCard = async (req, res) => {
   try {
     const card = await Card.findById(cardId);
     if (!card) {
-      res.status(404).send({ message: 'Карточка не найдена' });
+      res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена' });
       return;
     }
     card.remove();
     res.status(200).send({ message: 'Карточка удалена' });
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      res.status(400).send({ message: 'Невалидный ID карточки' });
+      res.status(BAD_REQ_ERROR).send({ message: 'Невалидный ID карточки' });
       return;
     }
-    res.status(500).send({ message: 'Произошла ошибка на сервере' });
+    res.status(SERVER__ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -53,16 +54,16 @@ const likeCard = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      res.status(404).send({ message: 'Карточка не найдена' });
+      res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена' });
       return;
     }
     res.status(200).send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      res.status(400).send({ message: 'Невалидный ID карточки' });
+      res.status(BAD_REQ_ERROR).send({ message: 'Невалидный ID карточки' });
       return;
     }
-    res.status(500).send({ message: 'Произошла ошибка на сервере' });
+    res.status(SERVER__ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -76,16 +77,16 @@ const dislikeCard = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      res.status(404).send({ message: 'Карточка не найдена' });
+      res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена' });
       return;
     }
     res.status(200).send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      res.status(400).send({ message: 'Невалидный ID карточки' });
+      res.status(BAD_REQ_ERROR).send({ message: 'Невалидный ID карточки' });
       return;
     }
-    res.status(500).send({ message: 'Произошла ошибка на сервере' });
+    res.status(SERVER__ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
