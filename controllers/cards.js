@@ -3,10 +3,10 @@ const Card = require('../models/cards');
 const createCard = async (req, res) => {
   const { name, link } = req.body;
   try {
-    await Card.create({ name, link, owner: req.user._id });
-    res.status(200).send({ message: 'Карточка создана' });
+    const card = await Card.create({ name, link, owner: req.user._id });
+    res.status(200).send(card);
   } catch (err) {
-    if (err.errors.link.name === 'ValidatorError') {
+    if (err.errors) {
       res.status(400).send({ message: 'Переданы некорректные данные' });
       return;
     }
@@ -56,7 +56,7 @@ const likeCard = async (req, res) => {
       res.status(404).send({ message: 'Карточка не найдена' });
       return;
     }
-    res.status(200).send('Все прошло успешно');
+    res.status(200).send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
       res.status(400).send({ message: 'Невалидный ID карточки' });

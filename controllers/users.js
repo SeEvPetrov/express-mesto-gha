@@ -6,7 +6,7 @@ const createUser = async (req, res) => {
     const user = await User.create({ name, about, avatar });
     res.status(200).send(user);
   } catch (err) {
-    if (err.errors.name.name === 'ValidatorError') {
+    if (err.errors) {
       res.status(400).send({ message: 'Переданы некорректные данные' });
       return;
     }
@@ -47,12 +47,11 @@ const updateUserInfo = async (req, res) => {
   const userId = req.user._id;
   try {
     const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true });
-    console.log(user);
     if (!user) {
       res.status(404).send({ message: 'Пользователь не найден' });
       return;
     }
-    res.status(200).send({ message: 'Данные пользователя обновлены' });
+    res.status(200).send(user);
   } catch (err) {
     if (err.kind === 'ObjectId') {
       res.status(400).send({ message: 'Невалидный ID пользователя' });
@@ -71,7 +70,7 @@ const updateUserAvatar = async (req, res) => {
       res.status(404).send({ message: 'Пользователь не найден' });
       return;
     }
-    res.status(200).send({ message: 'Данные аватара пользователя обновлены' });
+    res.status(200).send(user);
   } catch (err) {
     if (err.kind === 'ObjectId') {
       res.status(400).send({ message: 'Невалидный ID пользователя' });
