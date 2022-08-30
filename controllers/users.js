@@ -42,22 +42,31 @@ const getUserById = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
-  // const { name, about } = req.body;
+const updateUserInfo = async (req, res) => {
+  const { name, about } = req.body;
+  const userId = req.user._id;
   try {
-    const updat = await User.findByIdAndUpdate(req.user._id, {
-      'name': name,
-      'about': about,
-    });
-    res.status(200).send(updat);
+    await User.findByIdAndUpdate(userId, { name, about }, { new: true });
+    res.status(200).send('Данные пользователя обновлены');
   } catch (err) {
     res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
   }
 };
 
+const updateUserAvatar = async (req, res) => {
+  const { avatar } = req.body;
+  const userId = req.user._id;
+  try {
+    await User.findByIdAndUpdate(userId, { avatar }, { new: true });
+    res.status(200).send('Данные пользователя обновлены');
+  } catch (err) {
+    res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
+  }
+};
 module.exports = {
   createUser,
   getUsers,
   getUserById,
-  updateUser,
+  updateUserInfo,
+  updateUserAvatar,
 };
