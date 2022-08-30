@@ -53,8 +53,8 @@ const updateUserInfo = async (req, res) => {
     }
     res.status(200).send(user);
   } catch (err) {
-    if (err.kind === 'ObjectId') {
-      res.status(400).send({ message: 'Невалидный ID пользователя' });
+    if (err.errors) {
+      res.status(400).send({ message: 'Переданы некорректные данные' });
       return;
     }
     res.status(500).send({ message: 'Произошла ошибка на сервере' });
@@ -72,8 +72,8 @@ const updateUserAvatar = async (req, res) => {
     }
     res.status(200).send(user);
   } catch (err) {
-    if (err.kind === 'ObjectId') {
-      res.status(400).send({ message: 'Невалидный ID пользователя' });
+    if (err.errors) {
+      res.status(400).send({ message: 'Переданы некорректные данные' });
       return;
     }
     res.status(500).send({ message: 'Произошла ошибка на сервере', ...err });
