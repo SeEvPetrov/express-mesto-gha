@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const { PORT = 3000 } = process.env;
 const app = express();
 const { routes } = require('./routes');
+const { NOT_FOUND_ERROR } = require('./errors/errors');
 
 app.use((req, res, next) => {
   req.user = {
@@ -16,18 +17,21 @@ app.use((req, res, next) => {
 app.use(routes);
 
 app.use('*', (req, res, next) => {
-  res.status(404).send({ message: 'Такого запроса нет' });
+  res.status(NOT_FOUND_ERROR).send({ message: 'Такого запроса нет' });
   next();
 });
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/mestodb', {
-    useNewUrlParser: true,
-    useUnifiedTopology: false,
-  });
-
-  await app.listen(PORT);
-  console.log(`Сервер запущен на ${PORT} порту`);
+  try {
+    await mongoose.connect('mongodb://localhost:27017/mestodb', {
+      useNewUrlParser: true,
+      useUnifiedTopology: false,
+    });
+    await app.listen(PORT);
+    console.log(`Сервер запущен на ${PORT} порту`);
+  } catch (err) {
+    console.log(`Возникла ошибка: ${err} `);
+  }
 }
 
 main();
