@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
   BAD_REQ_ERROR,
@@ -130,6 +131,14 @@ const login = async (req, res, next) => {
     const user = await User.findOne({ email }).select('+password');
     const isUserValid = await bcrypt.compare(password, user.password);
     if (isUserValid) {
+      const token = jwt.sign({
+        _id: user._id,
+      }, 'SECRET');
+      res.cookie('jwt', token, {
+        maxAge: 3600000,
+        httpOnly: true,
+        sameSite: true,
+      });
       res.send({ data: user.toJSON() });
     } else {
       res.status(403).send({ message: 'Неправильный пароль' });

@@ -1,18 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+const cookieParser = require('cookie-parser');
+
 const { PORT = 3000 } = process.env;
 const app = express();
 const { routes } = require('./routes');
 const { NOT_FOUND_ERROR } = require('./errors/errors');
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '631b949d89770855655f29c1',
-  };
-
-  next();
-});
+app.use(cookieParser());
 
 app.use(routes);
 
