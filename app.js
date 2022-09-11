@@ -8,7 +8,7 @@ const { NOT_FOUND_ERROR } = require('./errors/errors');
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '630c97ef1ea76b2625787454',
+    _id: '631b949d89770855655f29c1',
   };
 
   next();
