@@ -33,6 +33,12 @@ const deleteCard = async (req, res) => {
       res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена' });
       return;
     }
+    if (req.user._id !== card.owner.toString()) {
+      console.log(req.user._id);
+      console.log(card.owner);
+      res.status(400).send('карточка не ваша');
+      return;
+    }
     card.remove();
     res.status(200).send({ message: 'Карточка удалена' });
   } catch (err) {
