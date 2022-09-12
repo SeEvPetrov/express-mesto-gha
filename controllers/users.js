@@ -66,6 +66,19 @@ const getUserById = async (req, res) => {
   }
 };
 
+const getUserMe = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден' });
+      return;
+    }
+    res.status(200).send(user);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const updateUserInfo = async (req, res) => {
   const { name, about } = req.body;
   const userId = req.user._id;
@@ -133,7 +146,7 @@ const login = async (req, res, next) => {
     if (isUserValid) {
       const token = jwt.sign({
         _id: user._id,
-      }, 'SECRET');
+      }, process.env.JWT_SECRET);
       res.cookie('jwt', token, {
         maxAge: 3600000,
         httpOnly: true,
@@ -155,4 +168,5 @@ module.exports = {
   updateUserInfo,
   updateUserAvatar,
   login,
+  getUserMe,
 };
