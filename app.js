@@ -8,18 +8,12 @@ const cookieParser = require('cookie-parser');
 const { PORT = 3000 } = process.env;
 const app = express();
 const { routes } = require('./routes');
-const { NOT_FOUND_ERROR } = require('./errors/errors');
-const { errorhandler } = require('./middlewares/error');
+const { errorhandler } = require('./middlewares/errorHandler');
 
 app.use(cookieParser());
 
 app.use(routes);
 app.use(errorhandler);
-
-app.use('*', (req, res, next) => {
-  res.status(NOT_FOUND_ERROR).send({ message: 'Такого запроса нет' });
-  next();
-});
 
 async function main() {
   try {

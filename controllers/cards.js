@@ -1,56 +1,47 @@
 const Card = require('../models/cards');
-const { BAD_REQ_ERROR, NOT_FOUND_ERROR, SERVER__ERROR } = require('../errors/errors');
+const {
+  ErrorNotFound, customError, ForbiddenError,
+} = require('../errors/index');
 
-const createCard = async (req, res) => {
+const createCard = async (req, res, next) => {
   const { name, link } = req.body;
   try {
     const card = await Card.create({ name, link, owner: req.user._id });
     res.status(200).send(card);
   } catch (err) {
-    if (err.errors) {
-      res.status(BAD_REQ_ERROR).send({ message: 'Переданы некорректные данные' });
-      return;
-    }
-    res.status(SERVER__ERROR).send({ message: 'Произошла ошибка на сервере' });
+    customError(err, req, res, next);
   }
 };
 
-const getCards = async (req, res) => {
+const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
     res.status(200).send(cards);
   } catch (err) {
-    res.status(SERVER__ERROR).send({ message: 'Произошла ошибка на сервере' });
+    customError(err, req, res, next);
   }
 };
 
-const deleteCard = async (req, res) => {
+const deleteCard = async (req, res, next) => {
   const { cardId } = req.params;
 
   try {
     const card = await Card.findById(cardId);
     if (!card) {
-      res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена' });
-      return;
+      throw new ErrorNotFound('Карточка не найдена');
     }
     if (req.user._id !== card.owner.toString()) {
-      console.log(req.user._id);
-      console.log(card.owner);
-      res.status(400).send('карточка не ваша');
+      next(new ForbiddenError('Чужую карточку не удалить'));
       return;
     }
     card.remove();
     res.status(200).send({ message: 'Карточка удалена' });
   } catch (err) {
-    if (err.kind === 'ObjectId') {
-      res.status(BAD_REQ_ERROR).send({ message: 'Невалидный ID карточки' });
-      return;
-    }
-    res.status(SERVER__ERROR).send({ message: 'Произошла ошибка на сервере' });
+    customError(err, req, res, next);
   }
 };
 
-const likeCard = async (req, res) => {
+const likeCard = async (req, res, next) => {
   const userId = req.user._id;
   const { cardId } = req.params;
   try {
@@ -60,20 +51,15 @@ const likeCard = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена' });
-      return;
+      throw new ErrorNotFound('Карточка не найдена');
     }
     res.status(200).send(card);
   } catch (err) {
-    if (err.kind === 'ObjectId') {
-      res.status(BAD_REQ_ERROR).send({ message: 'Невалидный ID карточки' });
-      return;
-    }
-    res.status(SERVER__ERROR).send({ message: 'Произошла ошибка на сервере' });
+    customError(err, req, res, next);
   }
 };
 
-const dislikeCard = async (req, res) => {
+const dislikeCard = async (req, res, next) => {
   const userId = req.user._id;
   const { cardId } = req.params;
   try {
@@ -83,16 +69,12 @@ const dislikeCard = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена' });
-      return;
+      throw new ErrorNotFound('Карточка не найдена');
     }
     res.status(200).send(card);
   } catch (err) {
-    if (err.kind === 'ObjectId') {
-      res.status(BAD_REQ_ERROR).send({ message: 'Невалидный ID карточки' });
-      return;
-    }
-    res.status(SERVER__ERROR).send({ message: 'Произошла ошибка на сервере' });
+    console.log(err);
+    customError(err, req, res, next);
   }
 };
 
