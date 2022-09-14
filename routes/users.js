@@ -9,6 +9,7 @@ const {
 userRoutes.get('/', express.json(), getUsers);
 userRoutes.get(
   '/:id',
+  express.json(),
   celebrate({
     params: Joi.object().keys({
       id: Joi.string().length(24).hex(),
