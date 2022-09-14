@@ -17,7 +17,7 @@ userRoutes.get(
 
   getUserById,
 );
-userRoutes.get('/me', getUserMe);
+userRoutes.get('/me', express.json(), getUserMe);
 userRoutes.patch(
   '/me',
   express.json(),

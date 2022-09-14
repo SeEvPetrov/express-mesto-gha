@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { SECRET_KEY, HASH_LENGTH } = require('../utils/config');
 const {
   BadRequestError, ErrorNotFound, AuthorizationError, customError,
 } = require('../errors/index');
@@ -11,7 +12,7 @@ const createUser = async (req, res, next) => {
   } = req.body;
 
   try {
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, HASH_LENGTH);
     const user = await User.create({
       name,
       about,
@@ -21,7 +22,6 @@ const createUser = async (req, res, next) => {
     });
     res.status(200).send(user);
   } catch (err) {
-    console.log(err);
     customError(err, req, res, next);
   }
 };
@@ -118,7 +118,7 @@ const login = async (req, res, next) => {
       {
         _id: user._id,
       },
-      process.env.JWT_SECRET,
+      SECRET_KEY,
     );
     res.cookie('jwt', token, {
       maxAge: 3600000 * 24 * 7,

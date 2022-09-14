@@ -5,7 +5,7 @@ const routes = express.Router();
 const { userRoutes } = require('./users');
 const { cardRoutes } = require('./cards');
 const { login, createUser } = require('../controllers/users');
-const { BadRequestError } = require('../errors/index');
+const { ErrorNotFound } = require('../errors/index');
 const auth = require('../middlewares/auth');
 
 routes.post(
@@ -42,6 +42,6 @@ routes.use(auth);
 routes.use('/users', userRoutes);
 routes.use('/cards', cardRoutes);
 
-routes.use('*', (req, res, next) => next(new BadRequestError('Такого запроса не существует')));
+routes.use('*', express.json(), (req, res, next) => next(new ErrorNotFound('Такого запроса не существует')));
 
 module.exports = { routes };

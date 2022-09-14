@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -22,8 +22,8 @@ app.use(limiter);
 app.use(cookieParser());
 
 app.use(routes);
-app.use(errorhandler);
 app.use(errors());
+app.use(errorhandler);
 
 async function main() {
   try {
