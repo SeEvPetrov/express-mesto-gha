@@ -21,6 +21,7 @@ const createUser = async (req, res, next) => {
     });
     res.status(200).send(user);
   } catch (err) {
+    console.log(err);
     customError(err, req, res, next);
   }
 };
@@ -120,7 +121,7 @@ const login = async (req, res, next) => {
       process.env.JWT_SECRET,
     );
     res.cookie('jwt', token, {
-      maxAge: 3600000,
+      maxAge: 3600000 * 24 * 7,
       httpOnly: true,
       sameSite: true,
     });
