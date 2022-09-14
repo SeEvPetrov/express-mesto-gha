@@ -36,9 +36,9 @@ userRoutes.patch(
   express.json(),
   celebrate({
     body: Joi.object().keys({
-      avatar: Joi.string().regex(
-        /https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i,
-      ),
+      avatar: Joi.string()
+        .required()
+        .pattern(/https?:\/\/(www\.)?[a-zA-Z\d\-.]{1,}\.[a-z]{1,6}([/a-z0-9\-._~:?#[\]@!$&'()*+,;=]*)/),
     }),
   }),
 
