@@ -3,7 +3,9 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { SECRET_KEY, HASH_LENGTH } = require('../utils/config');
 const {
-  ErrorNotFound, AuthorizationError, customError,
+  ErrorNotFound,
+  AuthorizationError,
+  customError,
 } = require('../errors/index');
 
 const createUser = async (req, res, next) => {
@@ -99,7 +101,6 @@ const updateUserAvatar = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     next(new AuthorizationError('Незаполнены обязательные поля'));
     return;

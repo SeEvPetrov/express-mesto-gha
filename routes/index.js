@@ -4,9 +4,9 @@ const { celebrate, Joi } = require('celebrate');
 const routes = express.Router();
 const { userRoutes } = require('./users');
 const { cardRoutes } = require('./cards');
+const auth = require('../middlewares/auth');
 const { login, createUser } = require('../controllers/users');
 const { ErrorNotFound } = require('../errors/index');
-const auth = require('../middlewares/auth');
 
 routes.post(
   '/signup',
@@ -39,7 +39,7 @@ routes.post(
   login,
 );
 
-routes.use(auth);
+// routes.use(auth);
 
 routes.use('/users', userRoutes);
 routes.use('/cards', cardRoutes);
