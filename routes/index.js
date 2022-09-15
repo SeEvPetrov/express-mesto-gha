@@ -39,7 +39,7 @@ routes.post(
   login,
 );
 
-// routes.use(auth);
+routes.use(auth);
 
 routes.use('/users', userRoutes);
 routes.use('/cards', cardRoutes);
