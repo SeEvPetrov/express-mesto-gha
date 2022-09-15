@@ -51,7 +51,7 @@ const getUserById = async (req, res, next) => {
 
 const getUserMe = async (req, res, next) => {
   try {
-    const { userId } = req.user._id;
+    const { userId } = req.params;
     const user = await User.findById(userId);
     if (!user) {
       throw new ErrorNotFound('Пользователь не найден');
@@ -109,7 +109,7 @@ const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      throw new ErrorNotFound('Пользователь не найден');
+      throw new AuthorizationError('Неправильный логин или пароль');
     }
     const isUserValid = await bcrypt.compare(password, user.password);
     if (!isUserValid) {
