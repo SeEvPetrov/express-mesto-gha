@@ -7,6 +7,7 @@ const {
 } = require('../controllers/users');
 
 userRoutes.get('/', express.json(), getUsers);
+userRoutes.get('/me', express.json(), getUserMe);
 userRoutes.get(
   '/:id',
   express.json(),
@@ -18,7 +19,7 @@ userRoutes.get(
 
   getUserById,
 );
-userRoutes.get('/me', express.json(), getUserMe);
+
 userRoutes.patch(
   '/me',
   express.json(),
