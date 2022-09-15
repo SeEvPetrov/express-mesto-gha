@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { SECRET_KEY } = require('../utils/config');
 
 const auth = (req, res, next) => {
   const token = req.cookies.jwt;
@@ -9,7 +10,7 @@ const auth = (req, res, next) => {
     return;
   }
   try {
-    payload = jwt.verify(token, process.env.JWT_SECRET);
+    payload = jwt.verify(token, SECRET_KEY);
   } catch (err) {
     next(err);
   }

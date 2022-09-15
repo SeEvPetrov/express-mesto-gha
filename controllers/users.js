@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { SECRET_KEY, HASH_LENGTH } = require('../utils/config');
 const {
-  BadRequestError, ErrorNotFound, AuthorizationError, customError,
+  ErrorNotFound, AuthorizationError, customError,
 } = require('../errors/index');
 
 const createUser = async (req, res, next) => {
@@ -51,7 +51,8 @@ const getUserById = async (req, res, next) => {
 
 const getUserMe = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user._id);
+    const { userId } = req.user._id;
+    const user = await User.findById(userId);
     if (!user) {
       throw new ErrorNotFound('Пользователь не найден');
     }
@@ -101,7 +102,7 @@ const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    next(new BadRequestError('Незаполнены обязательные поля'));
+    next(new AuthorizationError('Незаполнены обязательные поля'));
     return;
   }
 
