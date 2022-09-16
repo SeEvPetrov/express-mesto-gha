@@ -2,7 +2,6 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
-// const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 
@@ -12,10 +11,6 @@ const { PORT = 3000 } = process.env;
 const app = express();
 const { routes } = require('./routes');
 const { errorhandler } = require('./middlewares/errorHandler');
-
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-// });
 
 app.use(helmet());
 // app.use(limiter);

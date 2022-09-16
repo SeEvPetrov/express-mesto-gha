@@ -34,7 +34,7 @@ const deleteCard = async (req, res, next) => {
       next(new ForbiddenError('Чужую карточку не удалить'));
       return;
     }
-    card.remove();
+    await card.remove();
     res.status(200).send({ message: 'Карточка удалена' });
   } catch (err) {
     customError(err, req, res, next);

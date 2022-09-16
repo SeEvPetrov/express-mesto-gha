@@ -102,10 +102,6 @@ const updateUserAvatar = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    next(new AuthorizationError('Незаполнены обязательные поля'));
-    return;
-  }
 
   try {
     const user = await User.findOne({ email }).select('+password');
