@@ -8,11 +8,13 @@ const auth = (req, res, next) => {
 
   if (!token) {
     next(new AuthorizationError('Авторизуйтесь'));
+    return;
   }
   try {
     payload = jwt.verify(token, SECRET_KEY);
   } catch (err) {
     next(new AuthorizationError('Авторизуйтесь'));
+    return;
   }
 
   req.user = payload;
